@@ -13,7 +13,11 @@ def is_prime(n: int) -> bool:
     >>> is_prime(8)
     False
     """
+    d = 2
+    while n%d != 0:
+        d += 1 
     # PUT YOUR CODE HERE
+    return d == n
     pass
 
 
@@ -26,8 +30,14 @@ def gcd(a: int, b: int) -> int:
     >>> gcd(3, 7)
     1
     """
+    while a != 0 and b !=0 :
+        if a > b:
+            a %= b
+        else:
+            b %= a
+    return a+b
     # PUT YOUR CODE HERE
-    pass
+    pass 
 
 
 def multiplicative_inverse(e: int, phi: int) -> int:
@@ -49,10 +59,10 @@ def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[in
         raise ValueError("p and q cannot be equal")
 
     # n = pq
-    # PUT YOUR CODE HERE
+    n = p * q
 
     # phi = (p-1)(q-1)
-    # PUT YOUR CODE HERE
+    phi = (p-1) * (q-1)
 
     # Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
@@ -90,6 +100,9 @@ def decrypt(pk: tp.Tuple[int, int], ciphertext: tp.List[int]) -> str:
     return "".join(plain)
 
 
+# print(is_prime(3))
+
+
 if __name__ == "__main__":
     print("RSA Encrypter/ Decrypter")
     p = int(input("Enter a prime number (17, 19, 23, etc): "))
@@ -104,3 +117,5 @@ if __name__ == "__main__":
     print("Decrypting message with public key ", public, " . . .")
     print("Your message is:")
     print(decrypt(public, encrypted_msg))
+
+

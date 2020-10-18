@@ -15,7 +15,23 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
     ciphertext = ""
-    # PUT YOUR CODE HERE
+
+    for i in plaintext:
+        if i.isalpha():
+            lcFlag = i.islower()
+            if lcFlag:
+                if ord(i) + shift <= ord("z"):
+                    ciphertext += chr(ord(i) + shift)
+                else:
+                    ciphertext += chr(ord(i) + shift - (ord("z") - ord("a")) - 1)
+            else:
+                if ord(i) + shift <= ord("Z"):
+                    ciphertext += chr(ord(i) + shift)
+                else:
+                    ciphertext += chr(ord(i) + shift - (ord("Z") - ord("A")) - 1)
+        else:
+            ciphertext += i
+
     return ciphertext
 
 
@@ -33,7 +49,21 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     ''
     """
     plaintext = ""
-    # PUT YOUR CODE HERE
+    for i in ciphertext :
+        if i.isalpha():
+            lcFlag = i.islower()
+            if lcFlag:
+                if ord(i) - shift >= ord("a") :
+                    plaintext += chr(ord(i) - shift)
+                else:
+                    plaintext += chr(ord(i) - shift + (ord("z") - ord("a")) + 1)
+            else:
+                if ord(i) - shift >= ord("A"):
+                    plaintext += chr(ord(i) - shift)
+                else:
+                    plaintext += chr(ord(i) - shift + (ord("Z") - ord("A")) + 1)
+        else:
+            plaintext += i
     return plaintext
 
 
@@ -43,4 +73,10 @@ def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
     """
     best_shift = 0
     # PUT YOUR CODE HERE
+
     return best_shift
+
+
+
+# print(encrypt_caesar("PYTHON"))
+# print (decrypt_caesar("sbwkrq"))
