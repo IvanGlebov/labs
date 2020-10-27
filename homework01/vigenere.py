@@ -72,7 +72,7 @@ def find_shift(key_ch: str, ch: str, is_cipher: int) -> int:
     m = find_pos(ch)
     k = find_pos(key_ch)
     if k == -1 or m == -1:
-        print("Ошибка в ключе. Должны быть символы")
+        print("Key ERROR!")
         return 0
     # по формуле: (позиция вх.символа+ позиция символа ключа) mod 26 - шифроаание
     # (m-k)%26 - дешифрование
