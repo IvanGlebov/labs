@@ -20,6 +20,7 @@ def display(grid: List[List[str]]) -> None:
 
 
 def group(values: List[str], n: int) -> List[List[str]]:
+
     """
     Сгруппировать значения values в список, состоящий из списков по n элементов
 
@@ -29,6 +30,14 @@ def group(values: List[str], n: int) -> List[List[str]]:
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
     pass
+    temp = []
+    counter = 0
+    for i in range(0, len(values) // n):
+        temp.append([])
+        for j in range(0, n):
+            temp[i].append(values[counter])
+            counter += 1
+    return temp
 
 
 def get_row(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
@@ -42,6 +51,7 @@ def get_row(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     ['.', '8', '9']
     """
     pass
+    return grid[pos[0]]
 
 
 def get_col(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
@@ -55,6 +65,10 @@ def get_col(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     ['3', '6', '9']
     """
     pass
+    temp = []
+    for i in range(3):
+        temp.append(grid[i][pos[1]])
+    return temp
 
 
 def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
@@ -69,6 +83,12 @@ def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     ['2', '8', '.', '.', '.', '5', '.', '7', '9']
     """
     pass
+    # x, y = pos[0], pos[1]
+    ans = []
+    for i in range(3):
+        for j in range(3):
+            ans.append(grid[3 * (pos[0] // 3) + i][3 * (pos[1] // 3) + j])
+    return ans
 
 
 def find_empty_positions(grid: List[List[str]]) -> Optional[Tuple[int, int]]:
@@ -82,6 +102,10 @@ def find_empty_positions(grid: List[List[str]]) -> Optional[Tuple[int, int]]:
     (2, 0)
     """
     pass
+    for i in range(len(grid)):
+        for j in range(len(grid)):
+            if grid[i][j] == '.':
+                return i, j
 
 
 def find_possible_values(grid: List[List[str]], pos: Tuple[int, int]) -> Set[str]:
@@ -96,6 +120,15 @@ def find_possible_values(grid: List[List[str]], pos: Tuple[int, int]) -> Set[str
     True
     """
     pass
+    poss_vals = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    row = get_row(grid, pos)
+    col = get_col(grid, pos)
+    block = get_block(grid, pos)
+    # print(sorted(list(set(poss_vals) - set(row) - set(col) - set(block))))
+    return sorted(list(set(poss_vals) - set(row) - set(col) - set(block)))
+
+
+solvedblocks=0
 
 
 def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
@@ -112,6 +145,22 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
     pass
+
+    empty = find_empty_positions(grid)
+
+    if not empty:
+       global solvedblocks
+       solvedblocks += 1
+       return grid
+
+    posvals = find_possible_values(grid, empty)
+    for i in range(grid, empty):
+        grid[empty[0]][empty[1]] = posvals[i]
+        if solve(grid):
+            return grid
+        else:
+            grid[empty[0]][empty[1]] = '.'
+    return None
 
 
 def check_solution(solution: List[List[str]]) -> bool:
@@ -143,6 +192,26 @@ def generate_sudoku(N: int) -> List[List[str]]:
     True
     """
     pass
+    a = [7, 8, 9, 1, 2, 3, 4, 5, 6]
+    grid = []
+    for i in range(9):
+        if i != (3 or 6):
+            for k in range(3):
+                box = a[0]
+                for j in range(len(a) - 1):
+                    a[j] = str(a[j + 1])
+                a[-1] = str(box)
+            print(a)
+            grid.append(a)
+        else:
+            for k in range(4):
+                box = a[0]
+                for j in range(len(a) - 1):
+                    a[j] = str(a[j + 1])
+                a[-1] = str(box)
+            print(a)
+            grid.append(a)
+    return grid
 
 
 if __name__ == '__main__':
