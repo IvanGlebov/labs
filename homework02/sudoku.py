@@ -124,11 +124,9 @@ def find_possible_values(grid: List[List[str]], pos: Tuple[int, int]) -> Set[str
     row = get_row(grid, pos)
     col = get_col(grid, pos)
     block = get_block(grid, pos)
-    # print(sorted(list(set(poss_vals) - set(row) - set(col) - set(block))))
     a = sorted(list(set(poss_vals) - set(row) - set(col) - set(block)))
-    # print(type(a))
     a = set(a)
-    # print(type(a))
+    
     return a
 
 
