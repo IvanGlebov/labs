@@ -1,5 +1,5 @@
 from typing import Tuple, List, Set, Optional
-
+from random import sample
 
 def read_sudoku(filename: str) -> List[List[str]]:
     """ Прочитать Судоку из указанного файла """
@@ -125,7 +125,11 @@ def find_possible_values(grid: List[List[str]], pos: Tuple[int, int]) -> Set[str
     col = get_col(grid, pos)
     block = get_block(grid, pos)
     # print(sorted(list(set(poss_vals) - set(row) - set(col) - set(block))))
-    return sorted(list(set(poss_vals) - set(row) - set(col) - set(block)))
+    a = sorted(list(set(poss_vals) - set(row) - set(col) - set(block)))
+    # print(type(a))
+    a = set(a)
+    # print(type(a))
+    return a
 
 
 solvedblocks=0
@@ -154,19 +158,32 @@ def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
        return grid
 
     posvals = find_possible_values(grid, empty)
-    for i in range(grid, empty):
+    posvals = list(posvals)
+    for i in range(len(posvals)):
         grid[empty[0]][empty[1]] = posvals[i]
         if solve(grid):
             return grid
         else:
             grid[empty[0]][empty[1]] = '.'
+
     return None
 
 
 def check_solution(solution: List[List[str]]) -> bool:
-    """ Если решение solution верно, то вернуть True, в противном случае False """
-    # TODO: Add doctests with bad puzzles
+    # """ Если решение solution верно, то вернуть True, в противном случае False """
     pass
+
+    a = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    b = []
+    flag = True
+    print(solution)
+    for line in solution:
+        if (list(set(a) - set(line))) != b:
+            print("Failed line :")
+            print(line)
+            flag = False
+            break
+    return flag
 
 
 def generate_sudoku(N: int) -> List[List[str]]:
@@ -192,26 +209,34 @@ def generate_sudoku(N: int) -> List[List[str]]:
     True
     """
     pass
-    a = [7, 8, 9, 1, 2, 3, 4, 5, 6]
-    grid = []
-    for i in range(9):
-        if i != (3 or 6):
-            for k in range(3):
-                box = a[0]
-                for j in range(len(a) - 1):
-                    a[j] = str(a[j + 1])
-                a[-1] = str(box)
-            print(a)
-            grid.append(a)
-        else:
-            for k in range(4):
-                box = a[0]
-                for j in range(len(a) - 1):
-                    a[j] = str(a[j + 1])
-                a[-1] = str(box)
-            print(a)
-            grid.append(a)
-    return grid
+
+    base = 3
+    side = base * base
+
+   
+    def pattern(r, c): return (base * (r % base) + r // base + c) % side
+
+    
+
+    def shuffle(s): return sample(s, len(s))
+
+
+    rBase = range(base)
+    rows = [g * base + r for g in shuffle(rBase) for r in shuffle(rBase)]
+    cols = [g * base + c for g in shuffle(rBase) for c in shuffle(rBase)]
+    nums = shuffle(range(1, base * base + 1))
+
+    # produce board using randomized baseline pattern
+    board = [[nums[pattern(r, c)] for c in cols] for r in rows]
+
+    squares = side * side
+    if N > 81:
+        N = 81
+    empties = N
+    for p in sample(range(squares), empties):
+        board[p // side][p % side] = 0
+
+    return list(board)
 
 
 if __name__ == '__main__':
@@ -223,3 +248,4 @@ if __name__ == '__main__':
             print(f"Puzzle {fname} can't be solved")
         else:
             display(solution)
+
