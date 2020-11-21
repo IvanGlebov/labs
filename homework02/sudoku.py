@@ -66,7 +66,7 @@ def get_col(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
     """
     pass
     temp = []
-    for i in range(3):
+    for i in range(len(grid)):
         temp.append(grid[i][pos[1]])
     return temp
 
