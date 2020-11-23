@@ -208,7 +208,6 @@ def generate_sudoku(N: int) -> List[List[str]]:
    
     def pattern(r, c): return (base * (r % base) + r // base + c) % side
 
-    
 
     def shuffle(s): return sample(s, len(s))
 
@@ -228,12 +227,11 @@ def generate_sudoku(N: int) -> List[List[str]]:
     empties = 81 - N
     if empties < 0:
         empties = 0
-    if N == 0:
-        empties = 0
 
     for p in sample(range(squares), empties):
         board[p // side][p % side] = '.'
-
+#   a =     [list(map(str, a[i]    )) for i in range(9)]
+    board = [list(map(str, board[i])) for i in range(9)]
     return list(board)
 
 
