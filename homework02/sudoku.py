@@ -174,11 +174,11 @@ def check_solution(solution: List[List[str]]) -> bool:
     a = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
     b = []
     flag = True
-    print(solution)
+    # print(solution)
     for line in solution:
-        if (list(set(a) - set(line))) != b:
-            print("Failed line :")
-            print(line)
+        if (list(set.intersection(set(a), set(line)))) != b:
+            # print("Failed line :")
+            # print(line)
             flag = False
             break
     return flag
@@ -228,11 +228,17 @@ def generate_sudoku(N: int) -> List[List[str]]:
     board = [[nums[pattern(r, c)] for c in cols] for r in rows]
 
     squares = side * side
+    
     if N > 81:
         N = 81
-    empties = N
+    empties = 81 - N
+    if empties < 0:
+        empties = 0
+    if N == 0:
+        empties = 0
+
     for p in sample(range(squares), empties):
-        board[p // side][p % side] = 0
+        board[p // side][p % side] = '.'
 
     return list(board)
 
