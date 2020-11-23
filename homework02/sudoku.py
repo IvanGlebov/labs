@@ -171,14 +171,10 @@ def check_solution(solution: List[List[str]]) -> bool:
     # """ Если решение solution верно, то вернуть True, в противном случае False """
     pass
 
-    a = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-    b = []
+    a = {'1', '2', '3', '4', '5', '6', '7', '8', '9'}
     flag = True
-    # print(solution)
     for line in solution:
-        if (list(set.intersection(set(a), set(line)))) != b:
-            # print("Failed line :")
-            # print(line)
+        if len(a ^ set(line)) > 0:
             flag = False
             break
     return flag
