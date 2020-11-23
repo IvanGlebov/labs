@@ -172,12 +172,10 @@ def check_solution(solution: List[List[str]]) -> bool:
     pass
 
     a = {'1', '2', '3', '4', '5', '6', '7', '8', '9'}
-    flag = True
     for line in solution:
-        if len(a ^ set(line)) > 0:
-            flag = False
-            break
-    return flag
+        if len(a ^ set(line)) != 0:
+            return False
+    return True
 
 
 def generate_sudoku(N: int) -> List[List[str]]:
@@ -248,4 +246,6 @@ if __name__ == '__main__':
             print(f"Puzzle {fname} can't be solved")
         else:
             display(solution)
+            # if check_solution(solution) == True:
+                # print("Solution is correct")
 
