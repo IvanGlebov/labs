@@ -4,14 +4,19 @@ More information [here](https://github.com/Dementiy)
 Tasks completed by Ivan Glebov. ITMO.
 
 Complete progress:
-1. Completed.
-  # Encryption algorithms
-2. Completed.
-  # Sudoky game
-3. In progress.
-  # Game of life
+
+# 1. Encryption algorithms
+  Completed
+
+# 2. Sudoky game
+  Completed
+  
+# 3. Game of life
+  In progress
 life_proto.py is ready except next_generation function. It needs fixex to operate full game area instead of a square.
-4. Not started.
-  # PyVSC
-5. Not started
-  # Vk API
+
+# 4. PyVSC
+  Not started
+
+# 5. Vk API
+  Not started
