@@ -12,7 +12,7 @@ Complete progress:
   Completed
   
 # 3. Game of life
-  In progress
+  In progress.
 life_proto.py is ready except next_generation function. It needs fixex to operate full game area instead of a square.
 
 # 4. PyVSC
