@@ -230,7 +230,7 @@ def generate_sudoku(N: int) -> List[List[str]]:
 
     for p in sample(range(squares), empties):
         board[p // side][p % side] = '.'
-#   a =     [list(map(str, a[i]    )) for i in range(9)]
+#   a =     [list(map(str, a[i]    )) for i in range(9)]\
     board = [list(map(str, board[i])) for i in range(9)]
     return list(board)
 
