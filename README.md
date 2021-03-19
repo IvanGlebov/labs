@@ -14,10 +14,10 @@ Complete progress:
 # 3. [Game of life](https://github.com/IvanGlebov/labs/tree/master/homework03)
   Completed
 
-# 4. PyVSC
+# 4. [PyVSC](https://github.com/IvanGlebov/labs/tree/master/homework04)
   In progress.
 
-# 5. Vk API
+# 5. [Vk API](https://github.com/IvanGlebov/labs/tree/master/homework05)
   Not started. Do it only for extra points.
   
 # 6. Hacker News.
