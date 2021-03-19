@@ -49,6 +49,7 @@ class GUI(UI):
 
         running = True
         pause = False
+        after_pause_flag = False
         while running:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -86,10 +87,17 @@ class GUI(UI):
                         self.draw_lines()
                         self.draw_grid()
                         pygame.display.flip()
+                        after_pause_flag = True
 
             if not self.life.is_changing:
-                running = False
+                if not pause:
+                    if after_pause_flag:
+                        after_pause_flag = False
+                    else:
+                        # print("Not changing")
+                        running = False
             if self.life.is_max_generations_exceeded:
+                # print("Maximum generations")
                 running = False
             if not pause:
                 self.grid = self.life.curr_generation
@@ -109,9 +117,9 @@ class GUI(UI):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--width", default="100", help="Cells in width")
-    parser.add_argument("--height", default="150", help="Cells in height")
-    parser.add_argument("--cell-size", default="5", help="Size of cell wall in px")
+    parser.add_argument("--width", default="50", help="Cells in width")
+    parser.add_argument("--height", default="50", help="Cells in height")
+    parser.add_argument("--cell-size", default="20", help="Size of cell wall in px")
     parser.add_argument("--max-generations", default="500", help="Amount of game iterations")
     parser.add_argument("--speed", default="10", help="Speed of game. More -> faster")
     arguments = parser.parse_args()
