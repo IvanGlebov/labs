@@ -20,7 +20,7 @@ class Console(UI):
         for i in range(self.life.rows):
             screen.addstr(i+1, 0, "|" + str(" " * self.life.cols) + "|")
         screen.addstr(self.life.rows+1, 0, firstRow)
-        screen.refresh()
+        # screen.refresh()
 
 
 
@@ -35,7 +35,7 @@ class Console(UI):
                 else:
                     row_to_print += " "
             screen.addstr(row_number+1, 1, row_to_print)
-            screen.refresh()
+            # screen.refresh()
 
     def run(self) -> None:
         screen = curses.initscr()
@@ -47,6 +47,7 @@ class Console(UI):
             self.draw_borders(screen)
             self.life.step()
             self.draw_grid(screen)
+            screen.refresh()
             time.sleep(self.speed)
         curses.endwin()
 
