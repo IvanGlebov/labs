@@ -12,11 +12,13 @@ Complete progress:
   Completed
   
 # 3. [Game of life](https://github.com/IvanGlebov/labs/tree/master/homework03)
-  In progress.
-life_proto.py is ready except next_generation function. It needs fixex to operate full game area instead of a square.
+  Completed
 
 # 4. PyVSC
-  Not started
+  In progress.
 
 # 5. Vk API
-  Not started
+  Not started. Do it only for extra points.
+  
+# 6. Hacker News.
+  Not started.
