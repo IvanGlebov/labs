@@ -150,7 +150,6 @@ class GameOfLife:
             Список соседних клеток.
         """
         pass
-        # cell[0], cell[1] = cell[1], cell[0]
         left_border = max(0, min(cell[1] - 1, self.cell_width - 1))
         right_border = min(self.cell_width, min(cell[1] + 1, self.cell_width - 1)) + 1
 
@@ -195,9 +194,9 @@ class GameOfLife:
 
         for row in range(self.cell_height):
             for element in range(self.cell_width):
-                if 2 <= count_elements(self.get_neighbours((element, row)), 1) <= 3 and self.grid[row][element] == 1:
+                if 2 <= sum(self.get_neighbours((row, element)), 1) <= 3 and self.grid[row][element] == 1:
                     new_grid[row][element] = 1
-                if self.grid[row][element] == 0 and count_elements(self.get_neighbours((element, row)), 1) == 3:
+                if self.grid[row][element] == 0 and sum(self.get_neighbours((row, element)), 1) == 3:
                     new_grid[row][element] = 1
 
         self.grid = new_grid
@@ -213,8 +212,9 @@ class GameOfLife:
             Новое поколение клеток.
         """
         pass
+        return self.grid
 
 
 if __name__ == '__main__':
-    game = GameOfLife(640, 480, 20, 5)
+    game = GameOfLife(400, 400, 20, 5)
     game.run()

@@ -27,7 +27,6 @@ class GameOfLife:
         self.max_generations = max_generations
         # Текущее число поколений
         self.generations = 1
-        # self.grid = []
 
     def create_grid(self, randomize: bool = False) -> Grid:
         if randomize is True:
@@ -41,70 +40,66 @@ class GameOfLife:
 
     def get_neighbours(self, cell: Cell) -> Cells:
 
-        left_border = max(0, min(cell[0] - 1, self.cols - 1))
-        right_border = min(self.cols, min(cell[0] + 1, self.cols - 1)) + 1
+        left_border = max(0, min(cell[1] - 1, self.cols - 1))
+        right_border = min(self.cols, min(cell[1] + 1, self.cols - 1)) + 1
 
         # print("Width")
-        # print(str(left_border) + " <= x <= " + str(right_border - 1))
+        # print(str(left_border) + " <= x <= " + str(right_border-1))
         # print([i for i in range(left_border, right_border)])
 
-        top_border = max(0, min(cell[1] - 1, self.rows - 1))
-        bottom_border = min(self.rows, min(cell[1] + 1, self.rows - 1)) + 1
+        top_border = max(0, min(cell[0] - 1, self.rows - 1))
+        bottom_border = min(self.rows - 1, min(cell[0] + 1, self.rows - 1)) + 1
 
         # print("\n")
         # print("Height")
-        # print(str(top_border) + " <= y <= " + str(bottom_border - 1))
+        # print(str(top_border) + " <= y <= " + str(bottom_border-1))
         # print([i for i in range(top_border, bottom_border)])
 
         result_list = []
+        exeption = False
         for i in range(top_border, bottom_border):
             for j in range(left_border, right_border):
-                if i == cell[1] and j == cell[0]:
+                if i == cell[0] and j == cell[1]:
+                    # print('cell x,y : ' + str(j) + ", " + str(i) + ' checked')
                     continue
                 else:
                     try:
-                        result_list.append(self.grid[i][j])
+                        result_list.append(self.curr_generation[i][j])
                     except:
-                        print("Error in row " + str(i) + ", column " + str(j))
+                        exeption = True
+                        # print("Error in row " + str(i) + ", column " + str(j))
+        # print(result_list)
         return result_list
-        pass
 
     def get_next_generation(self) -> Grid:
-
-        old_grid = self.grid
-        new_grid = self.create_grid(False)
-        neighbours_grid = [[0] * len(old_grid[0]) for i in range(len(old_grid))]
-
-        def count_elements(in_list, element_type):
-            counter = 0
-            for i in in_list:
-                if i == element_type:
-                    counter += 1
-            return counter
-
+        self.prev_generation = self.curr_generation
+        next_grid = [[0] * len(self.prev_generation[0]) for i in range(len(self.prev_generation))]
+        neighbours_grid = [[0] * len(self.prev_generation[0]) for i in range(len(self.prev_generation))]
         for row in range(self.rows):
-            for element in range(self.cols):
-                if 2 <= count_elements(self.get_neighbours((element, row)), 1) <= 3 and self.grid[row][element] == 1:
-                    new_grid[row][element] = 1
-                # print("row: " + str(row) + ", element: " + str(element))
-                if self.grid[row][element] == 0 and count_elements(self.get_neighbours((element, row)), 1) == 3:
-                    new_grid[row][element] = 1
-                neighbours_grid[row][element] = count_elements(self.get_neighbours((element, row)), 1)
+            for col in range(self.cols):
+                neighbours = sum(self.get_neighbours((row, col)))
+                neighbours_grid[row][col] = neighbours
 
-        self.grid = new_grid
-        # print(neighbours_grid)
-        for row in neighbours_grid:
-            print(row)
-        print('\n')
-        if old_grid == new_grid:
-            print("Repeat!")
+        # something strange is here
+        # Well, error was above
+        for row in range(len(neighbours_grid)):
+            for col in range(len(neighbours_grid[0])):
+                if self.curr_generation[row][col] == 1:
+                    if 2 <= neighbours_grid[row][col] <= 3:
+                        next_grid[row][col] = 1
+                if self.curr_generation[row][col] == 0:
+                    if neighbours_grid[row][col] == 3:
+                        next_grid[row][col] = 1
+        self.curr_generation = next_grid
 
         pass
-        return new_grid
+        return next_grid
 
     def step(self) -> None:
-        self.get_next_generation()
-        self.generations += 1
+        if not self.is_max_generations_exceeded:
+            self.get_next_generation()
+            self.generations += 1
+
         """
         Выполнить один шаг игры.
         """
@@ -112,26 +107,26 @@ class GameOfLife:
 
     @property
     def is_max_generations_exceeded(self) -> bool:
-        """
-                Не превысило ли текущее число поколений максимально допустимое.
-                """
-        pass
-        if self.generations > self.max_generations:
+        # """
+        #         Не превысило ли текущее число поколений максимально допустимое.
+        #         """
+        # pass
+        if self.generations >= self.max_generations:
             return True
         else:
             return False
 
     @property
     def is_changing(self) -> bool:
-        """
-                Изменилось ли состояние клеток с предыдущего шага.
-                """
-        pass
-
-        if self.curr_generation != self.prev_generation:
+        # """
+        #         Изменилось ли состояние клеток с предыдущего шага.
+        #         """
+        # pass
+        if self.prev_generation != self.curr_generation:
             return True
         else:
             return False
+
 
     @staticmethod
     def from_file(filename: pathlib.Path) -> 'GameOfLife':
@@ -150,7 +145,7 @@ class GameOfLife:
     def save(self, filename: pathlib.Path) -> None:
         save_string = ''
 
-        for row in self.grid:
+        for row in self.curr_generation:
             for el in row:
                 save_string += str(el)
             save_string += '\n'
