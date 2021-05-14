@@ -2,6 +2,7 @@ import os
 import pathlib
 import shutil
 import stat
+import time
 import typing as tp
 
 from pyvcs.index import read_index, update_index
@@ -30,7 +31,9 @@ def checkout(gitdir: pathlib.Path, obj_name: str) -> None:
             if "/" in entry.name:
                 shutil.rmtree(entry.name[: entry.name.find("/")])
             else:
-                os.chmod(entry.name, 0o777)
+                # os.umask(777)
+                os.chmod(entry.name, 777)
+                # time.sleep(2)
                 os.remove(entry.name)
     object_all_path = gitdir / "objects" / obj_name[:2] / obj_name[2:]
     with object_all_path.open(mode="rb") as f2:
