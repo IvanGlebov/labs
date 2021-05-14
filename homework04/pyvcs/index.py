@@ -25,30 +25,118 @@ class GitIndexEntry(tp.NamedTuple):
     name: str
 
     def pack(self) -> bytes:
-        # PUT YOUR CODE HERE
-        ...
+        values = (
+            self.ctime_s, self.ctime_n, self.mtime_s, self.mtime_n, self.dev, self.ino, self.mode, self.uid, self.gid,
+            self.size, self.sha1, self.flags, self.name.encode())
+        name_code = str(len(self.name.encode())) + "s"
+        nulls = "3x"
+        print()
+        packed = struct.pack(">10i20sh" + name_code + nulls, *values)
+
+        return packed
 
     @staticmethod
     def unpack(data: bytes) -> "GitIndexEntry":
-        # PUT YOUR CODE HERE
-        ...
+        kos_tyl = str(len(data) - 62) + "s"
+        unpacked_data = struct.unpack(">10i20sh" + kos_tyl, data)
+        name_class = unpacked_data[12][:len(unpacked_data[12]) - 3].decode("utf-8")
+        name_class = name_class.replace("\\", "/")
+        unpacked_class = GitIndexEntry(
+            ctime_s=unpacked_data[0],
+            ctime_n=unpacked_data[1],
+            mtime_s=unpacked_data[2],
+            mtime_n=unpacked_data[3],
+            dev=unpacked_data[4],
+            ino=unpacked_data[5],
+            mode=unpacked_data[6],
+            uid=unpacked_data[7],
+            gid=unpacked_data[8],
+            size=unpacked_data[9],
+            sha1=unpacked_data[10],
+            flags=unpacked_data[11],
+            name=name_class
+        )
+
+        return unpacked_class
 
 
 def read_index(gitdir: pathlib.Path) -> tp.List[GitIndexEntry]:
     # PUT YOUR CODE HERE
-    ...
+    entries = []
+    path_all = gitdir / "index"
+    try:
+        f = path_all.open(mode="rb")
+        content = f.read()
+    except:
+        return []
+    len_content = (int.from_bytes(content[8:12], "big"))
+    counter = 0
+    start = 62
+    content = content[12:-20]
+    for i in range(len_content):
+        pointer = b"\x00\x00\x00"
+        end = content[start:].find(pointer)
+        entries.append(GitIndexEntry.unpack(content[counter:start + end + 3]))
+        # entries.append((content[start:start + end]))
+        start += end + 62 + 3
+        counter += 62 + end + 3
+    return entries
 
 
 def write_index(gitdir: pathlib.Path, entries: tp.List[GitIndexEntry]) -> None:
-    # PUT YOUR CODE HERE
-    ...
+    index = gitdir / "index"
+    to_hash = bytes()
+    f = index.open(mode="wb")
+    values = (b"DIRC", 2, len(entries))
+    pack = struct.pack(">4s2i", *values)
+    to_hash += pack
+    f.write(pack)
+    for el in entries:
+        f.write(el.pack())
+        to_hash += el.pack()
+    hash_fin = hashlib.sha1(to_hash).hexdigest()
+    result = bytearray.fromhex(hash_fin)
+    f.write(struct.pack(">" + str(len(result)) + "s", result))
+    f.close()
 
 
 def ls_files(gitdir: pathlib.Path, details: bool = False) -> None:
-    # PUT YOUR CODE HERE
-    ...
+    entries = read_index(gitdir)
+    for el in entries:
+        if not details:
+            print(el.name)
+
+        else:
+            print(str(oct(el.mode))[2:] + " " + str(el.sha1.hex()) + " 0	" + el.name)
 
 
 def update_index(gitdir: pathlib.Path, paths: tp.List[pathlib.Path], write: bool = True) -> None:
-    # PUT YOUR CODE HERE
-    ...
+    entries = []
+    for el in paths:
+        f = el.open()
+        str_file = f.read()
+        sha1 = hash_object(str_file.encode(), "blob", write=True)
+        stat = os.stat(el)
+        entries.append(
+            GitIndexEntry(
+                ctime_s=int(stat.st_ctime),
+                ctime_n=0,
+                mtime_s=int(stat.st_mtime),
+                mtime_n=0,
+                dev=stat.st_dev,
+                ino=stat.st_ino,
+                mode=stat.st_mode,
+                uid=stat.st_uid,
+                gid=stat.st_gid,
+                size=stat.st_size,
+                sha1=bytes.fromhex(sha1),
+                flags=7,
+                name=str(el)
+            ))
+    entries = sorted(entries, key=lambda x: x.name)
+    if not (gitdir / "index").exists():
+        write_index(gitdir, entries)
+    else:
+        index = read_index(gitdir)
+        index += entries
+        write_index(gitdir, index)

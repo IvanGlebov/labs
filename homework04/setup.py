@@ -2,13 +2,14 @@ from setuptools import setup
 
 import pyvcs
 
-AUTHOR = "Dmitrii Sorokin"
-AUTHOR_EMAIL = "dementiy@yandex.ru"
+AUTHOR = "Ivan Glebov"
+AUTHOR_EMAIL = "glebov.vanya@list.ru"
 HOME_PAGE = "https://github.com/Dementiy/pybook-assignments"
 
 setup(
     name="pyvcs",
     version=pyvcs.__version__,
+    # version="1.0",
     description="The stupid content tracker",
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
