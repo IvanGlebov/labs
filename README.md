@@ -20,5 +20,5 @@ Complete progress:
 # 5. [Vk API](https://github.com/IvanGlebov/labs/tree/master/homework05)
   Not started. Do it only for extra points.
   
-# 6. Hacker News.
+# 6. [Hacker News](https://github.com/IvanGlebov/labs/tree/master/homework06)
   Finished. Ready for review.
