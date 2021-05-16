@@ -15,10 +15,10 @@ Complete progress:
   Completed
 
 # 4. [PyVSC](https://github.com/IvanGlebov/labs/tree/master/homework04)
-  In progress.
+  Completed
 
 # 5. [Vk API](https://github.com/IvanGlebov/labs/tree/master/homework05)
   Not started. Do it only for extra points.
   
 # 6. Hacker News.
-  Not started.
+  Finished. Ready for review.
